@@ -198,6 +198,7 @@ console.log(combo);
 
 //Lesson 11:classes
 
+/*
 class CoolPerson
 {
     constructor(name)
@@ -213,3 +214,10 @@ class CoolPerson
 
 const person = new CoolPerson("Mosh");
 person.walk();
+*/
+
+// Lesson 13: Modules
+import { Teacher } from './teacher';
+
+const teacher = new Teacher("Hunni", "Comp Sec");
+teacher.teach();
