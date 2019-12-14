@@ -217,7 +217,8 @@ person.walk();
 */
 
 // Lesson 13: Modules
-import { Teacher } from './teacher';
+
+import Teacher, { promote } from "./teacher";
 
 const teacher = new Teacher("Hunni", "Comp Sec");
 teacher.teach();
