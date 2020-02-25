@@ -33,17 +33,6 @@ class Counter extends Component {
 
   // instead of constructor above make a arrow function, biding
   // event handlers
-  handleIncrement = id => {
-    console.log(id);
-    // do not have access to the 'this' state property
-    // obj.method(); -> this will be returned corrctly
-    // function(); -> does not ahve 'this' to look at
-    // console.log("increment click", this);
-    // react does not acknowledge changes like angular does
-    // hence needed this.setState to change states
-    // get the actual count add 1, and set it to count
-    this.setState({ value: this.state.value + 1 });
-  };
 
   //asynchronus because dont know when this method is to be callced
   //use inline functions again
@@ -58,7 +47,7 @@ class Counter extends Component {
       <div>
         <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
         <button
-          onClick={() => this.handleIncrement({ id: this.state.value })}
+          onClick={() => this.props.onIncrement(this.props.counter)}
           className="btn btn-secondary btn-sm"
         >
           Increment
@@ -86,15 +75,14 @@ class Counter extends Component {
   //descriptive names for other devs
   getBadgeClasses() {
     let classes = "badge m-2 badge-"; // needed to be consistent with yellow == 0 which is warning and blue else
-    classes += this.state.value === 0 ? "warning" : "primary";
+    classes += this.props.counter.value === 0 ? "warning" : "primary";
     return classes;
   }
 
   // needed to embedded expressions
   formatCount() {
-    const { value: count } = this.state;
-    const x = <h1>Zero</h1>;
-    return count === 0 ? x : count;
+    const { value } = this.props.counter;
+    return value === 0 ? "Zero" : value;
   }
 }
 
