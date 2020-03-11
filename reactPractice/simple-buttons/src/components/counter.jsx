@@ -100,6 +100,13 @@ class Counter extends Component {
     return classes;
   }
 
+  getButtonDisplay() {
+    const { value } = this.props.counter;
+    if (value <= 0) {
+      return;
+    }
+  }
+
   // needed to embedded expressions
   formatCount() {
     const { value } = this.props.counter;
