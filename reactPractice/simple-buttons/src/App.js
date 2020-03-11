@@ -14,6 +14,18 @@ class App extends Component {
     ]
   };
 
+  //create a constructor for implementing
+  //the initial variables
+  constructor(props) {
+    super(props);
+    console.log("App - Constructor");
+    //this.state = this.props;
+  }
+
+  componentDidMount() {
+    console.log("App - Mounted");
+  }
+
   handleDelete = counterId => {
     const counters = this.state.counters.filter(c => c.id !== counterId);
     this.setState({ counters });
@@ -28,6 +40,15 @@ class App extends Component {
     this.setState({ counters });
   };
 
+  handleDecrement = counter => {
+    console.log(counter);
+    const counters = [...this.state.counters];
+    const index = counters.indexOf(counter);
+    counters[index] = { ...counter };
+    counters[index].value--;
+    this.setState({ counters });
+  };
+
   handleReset = () => {
     const counters = this.state.counters.map(c => {
       c.value = 0;
@@ -37,6 +58,8 @@ class App extends Component {
   };
 
   render() {
+    console.log("App - Rendered");
+
     return (
       <React.Fragment>
         <NavBar
@@ -48,6 +71,7 @@ class App extends Component {
             onReset={this.handleReset}
             onDelete={this.handleDelete}
             onIncrement={this.handleIncrement}
+            onDecrement={this.handleDecrement}
           />
         </main>
       </React.Fragment>

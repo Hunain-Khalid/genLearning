@@ -13,6 +13,20 @@ class Counter extends Component {
     fontWeight: "bold"
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log("prevProps", prevProps);
+    console.log("prevState", prevState);
+
+    if (prevProps.counter.value !== this.props.counter.value) {
+      // ajax call here
+    }
+  }
+
+  componentWillUnmount() {
+    console.log("Counter - unount");
+    //clearn-up purposes
+  }
+
   // this is to make conditional rendering possible
   renderTags() {
     if (this.state.tags.length === 0) return <p>no tags!</p>;
@@ -43,20 +57,27 @@ class Counter extends Component {
 
     // truthy vs fasley!
     // this.handleIncrement == reference to method not method itself
+    console.log("Counter - Rendered");
     return (
       <div>
         <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
         <button
           onClick={() => this.props.onIncrement(this.props.counter)}
-          className="btn btn-secondary btn-sm"
+          className="btn btn-secondary btn-sm m-1"
         >
-          Increment
+          +
+        </button>
+        <button
+          onClick={() => this.props.onDecrement(this.props.counter)}
+          className="btn btn-secondary btn-sm m-1"
+        >
+          -
         </button>
         <button
           onClick={() => this.props.onDelete(this.props.counter.id)}
           className="btn btn-danger btn-sm m-2"
         >
-          Delete
+          X
         </button>
       </div>
     );
