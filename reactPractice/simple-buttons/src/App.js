@@ -11,8 +11,12 @@ class App extends Component {
       { id: 2, value: 0 },
       { id: 3, value: 0 },
       { id: 4, value: 0 }
-    ]
+    ],
+    heart: [{ id: 5, value: false }]
   };
+
+  //remember we are bubbling up from counter components,
+  //into the main file, in this case App.js
 
   //create a constructor for implementing
   //the initial variables
