@@ -4,10 +4,14 @@ import React, { Component } from "react";
 //from the fakeMovieService folder
 import { getMovies } from "../services/fakeMovieService";
 import Like from "./common/like";
+import Pagination from "./common/pagination";
+import { paginate } from "../utils/paginate";
 // remember because of named export must ahve curly praces!
 class Movies extends Component {
   state = {
     movies: getMovies(),
+    currentPage: 1,
+    pageSize: 4,
     //not the right way to import the movie
     //files
   };
@@ -33,6 +37,12 @@ class Movies extends Component {
     movies[indx].liked = !movies[indx].liked;
     this.setState({ movies });
   };
+
+  //Needed this function to get the current page hence,
+  //can show activation of page versus inactivation
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
+  };
   //conditional statement will appear in the render method prior to the return
   //function, obv must return something, can simplify using a const for
   //the amount of movies
@@ -42,9 +52,12 @@ class Movies extends Component {
   // can only return one element at a time.
   render() {
     const { length: movieCount } = this.state.movies;
+    const { pageSize, currentPage, movies: allMovies } = this.state;
 
     if (movieCount === 0)
       return <p>There are no movies left in the database</p>;
+
+    const movies = paginate(allMovies, currentPage, pageSize);
 
     return (
       <React.Fragment>
@@ -61,7 +74,7 @@ class Movies extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map((movie) => (
+            {movies.map((movie) => (
               <tr key={movie._id}>
                 <td>{movie.title}</td>
                 <td>{movie.genre.name}</td>
@@ -85,6 +98,12 @@ class Movies extends Component {
             ))}
           </tbody>
         </table>
+        <Pagination
+          itmsCnt={movieCount}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
