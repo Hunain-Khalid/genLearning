@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import _ from "lodash"; // from underscore javasceipt libarary
 
 /**
@@ -20,13 +21,16 @@ import _ from "lodash"; // from underscore javasceipt libarary
  *  2.0: I beleived i had to delete everything but this may not be the case
  *       instead making sure my movies and pagnation have the same vaeriable
  *       names, lol
+ * -----
+ * 3.0:  Prop Type checking should be done (acts as a param type checker, warns
+ *       against the use of wrong types)
  */
 const Pagination = (props) => {
   const { itmsCnt, pageSize, currentPage, onPageChange } = props;
-  console.log(currentPage);
+  //console.log(currentPage);
 
   const pagesCount = itmsCnt / pageSize;
-  console.log(pagesCount);
+  //console.log(pagesCount);
 
   if (pagesCount === 1) return null;
   const pages = _.range(1, pagesCount + 1);
@@ -47,6 +51,13 @@ const Pagination = (props) => {
       </ul>
     </nav>
   );
+};
+
+Pagination.propTypes = {
+  itmsCnt: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
 };
 
 export default Pagination;
