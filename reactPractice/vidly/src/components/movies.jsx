@@ -77,16 +77,19 @@ class Movies extends Component {
   //attempt to do this myself first
 
   //remmeber if you want something clone it
+  //his implementation doesnt work but mine does?!?!
+  //nevermind forgot braces
+
   handleSort = (path) => {
     const sortColumn = { ...this.state.sortColumn };
 
-    if (sortColumn.path === path) {
-      sortColumn.order = sortColumn === "asc" ? "desc" : "asc";
-    } else {
+    if (sortColumn.path === path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
       sortColumn.path = path;
       sortColumn.order = "asc";
     }
-
+    console.log(path);
     this.setState({ sortColumn });
 
     /*  Att #2
@@ -147,7 +150,7 @@ class Movies extends Component {
 
     return (
       <div className="row">
-        <div className="col-2">
+        <div className="col-3">
           <ListGroup
             items={genres}
             onItemSelect={this.handleGenreSelect}
