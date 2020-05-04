@@ -5,7 +5,8 @@
  *
  *
  *
- *
+ * Lec #15: Watch out for multi-layers of abstraction. i.e html "basic tables" vs react "components"
+ * Lec #16: Sorting implementation per column
  *
  */
 
@@ -14,11 +15,12 @@ import React, { Component } from "react";
 //makes sense this is how you import getMovies
 //from the fakeMovieService folder
 import { getMovies } from "../services/fakeMovieService";
-import Like from "./common/like";
+import MoviesTable from "./moviesTable";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/fakeGenreService";
+import _ from "lodash";
 // remember because of named export must ahve curly praces!
 // we should use pagination (more so typechecking with PropTypes)
 class Movies extends Component {
@@ -27,7 +29,7 @@ class Movies extends Component {
     genres: [],
     currentPage: 1,
     pageSize: 4,
-
+    sortColumn: { path: "title", order: "asc" },
     //not the right way to import the movie
     //files
   };
@@ -35,8 +37,8 @@ class Movies extends Component {
   //without this when calling backened servies you can get a runtime error
 
   componentDidMount() {
-    const genres = [{ name: "All Genres" }, ...getGenres()];
-    this.setState({ movies: getMovies(), genres: getGenres(), genres });
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres });
   }
 
   handleDelete = (movie) => {
@@ -71,6 +73,40 @@ class Movies extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
+  //here we need to handle sorting in the reverse order, again like always
+  //attempt to do this myself first
+
+  //remmeber if you want something clone it
+  handleSort = (path) => {
+    const sortColumn = { ...this.state.sortColumn };
+
+    if (sortColumn.path === path) {
+      sortColumn.order = sortColumn === "asc" ? "desc" : "asc";
+    } else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+
+    this.setState({ sortColumn });
+
+    /*  Att #2
+    if (sortColumn.path === path) {
+      this.setState({ sortColumn: { path, order: "dsc" } });
+    } else {
+      this.setState({ sortColumn: { path, order: "asc" } });
+    }*/
+
+    /*
+    Attempt#1
+    if (path === "asc") {
+      this.setState({ sortColumn: { path, order: "dsc" } });
+    } else {
+      this.setState({ sortColumn: { path, order: "asc" } });
+    }
+    */
+    //this.setState({ currentPage: page });
+  };
+
   //conditional statement will appear in the render method prior to the return
   //function, obv must return something, can simplify using a const for
   //the amount of movies
@@ -83,6 +119,9 @@ class Movies extends Component {
   //         key here being "item being selected"
   //         Object destructring needed in rendering method to send information back and forth from,
   //         methods it itself contains and simplicfication of code.
+  //         Methods of manupliation need to be in the render method PRIOR To the
+  //         return statement. ORDER OF IMPLEMENTATION MATTERS!!!!!
+
   render() {
     const { length: movieCount } = this.state.movies;
     const {
@@ -91,6 +130,7 @@ class Movies extends Component {
       movies: allMovies,
       selectedGenre,
       genres,
+      sortColumn,
     } = this.state;
 
     if (movieCount === 0)
@@ -100,7 +140,10 @@ class Movies extends Component {
       selectedGenre && selectedGenre._id
         ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
         : allMovies;
-    const movies = paginate(filtered, currentPage, pageSize);
+
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize);
 
     return (
       <div className="row">
@@ -115,42 +158,13 @@ class Movies extends Component {
         <div className="col">
           <p>Movie Database!: Showing {filtered.length} movies.</p>
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Stock</th>
-                <th>Rate</th>
-                <th>Like</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {movies.map((movie) => (
-                <tr key={movie._id}>
-                  <td>{movie.title}</td>
-                  <td>{movie.genre.name}</td>
-                  <td>{movie.numberInStock}</td>
-                  <td>{movie.dailyRentalRate}</td>
-                  <td>
-                    <Like
-                      liked={movie.liked}
-                      onClick={() => this.handleLike(movie)}
-                    />
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => this.handleDelete(movie)}
-                      className="btn btn-danger btn-sm"
-                    >
-                      DELETE
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <MoviesTable
+            movies={movies}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+            onSort={this.handleSort}
+          />
+
           <Pagination
             itmsCnt={filtered.length}
             pageSize={pageSize}
