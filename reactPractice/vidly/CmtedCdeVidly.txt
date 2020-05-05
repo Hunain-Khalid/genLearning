@@ -1,4 +1,19 @@
+/**
+ * All Plumbing goes here at the "head" of the website,
+ * this is the main "page" that contains all other smaller
+ * components.
+ *
+ * THIS IS A BACKUP COPY WHERE COMMENTS GO!
+ *
+ * Lec #15: Watch out for multi-layers of abstraction. i.e html "basic tables" vs react "components"
+ * Lec #16: Sorting implementation per column
+ *
+ */
+
+//ok i need to create a table with x and y amount of rows/cols
 import React, { Component } from "react";
+//makes sense this is how you import getMovies
+//from the fakeMovieService folder
 import { getMovies } from "../services/fakeMovieService";
 import MoviesTable from "./moviesTable";
 import Pagination from "./common/pagination";
@@ -6,7 +21,8 @@ import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/fakeGenreService";
 import _ from "lodash";
-
+// remember because of named export must ahve curly praces!
+// we should use pagination (more so typechecking with PropTypes)
 class Movies extends Component {
   state = {
     movies: [],
@@ -14,7 +30,11 @@ class Movies extends Component {
     currentPage: 1,
     pageSize: 4,
     sortColumn: { path: "title", order: "asc" },
+    //not the right way to import the movie
+    //files
   };
+
+  //without this when calling backened servies you can get a runtime error
 
   componentDidMount() {
     const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
@@ -23,10 +43,16 @@ class Movies extends Component {
 
   handleDelete = (movie) => {
     console.log(movie);
+    //remember need setState method to change the
+    //state correctly
+    //att1 :this.setState(movie.numberInStock: movie.numberInStock - 1);
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
+    // the above gets an array of movies except the one that is being selected
+    // set the state of this class now, which will override the movies in the state
+    // the below is current javascript convetion, if object to be overridden has
+    // the same name as the overrider then this.setState({ movies: movies });
     this.setState({ movies });
   };
-
   handleLike = (movie) => {
     console.log("Like is clicked!");
     console.log(movie);
@@ -37,6 +63,8 @@ class Movies extends Component {
     this.setState({ movies });
   };
 
+  //Needed this function to get the current page hence,
+  //can show activation of page versus inactivation
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
   };
@@ -44,6 +72,13 @@ class Movies extends Component {
   handleGenreSelect = (genre) => {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
+
+  //here we need to handle sorting in the reverse order, again like always
+  //attempt to do this myself first
+
+  //remmeber if you want something clone it
+  //his implementation doesnt work but mine does?!?!
+  //nevermind forgot braces, nvm nvm?
 
   handleSort = (path) => {
     const sortColumn = { ...this.state.sortColumn };
@@ -56,7 +91,39 @@ class Movies extends Component {
     }
     console.log(path);
     this.setState({ sortColumn });
+
+    /*  Att #2
+    if (sortColumn.path === path) {
+      this.setState({ sortColumn: { path, order: "dsc" } });
+    } else {
+      this.setState({ sortColumn: { path, order: "asc" } });
+    }*/
+
+    /*
+    Attempt#1
+    if (path === "asc") {
+      this.setState({ sortColumn: { path, order: "dsc" } });
+    } else {
+      this.setState({ sortColumn: { path, order: "asc" } });
+    }
+    */
+    //this.setState({ currentPage: page });
   };
+
+  //conditional statement will appear in the render method prior to the return
+  //function, obv must return something, can simplify using a const for
+  //the amount of movies
+
+  // remember cannot have two different web "fragments" right beside each other, need
+  // to be combined into one via a div oooor react fragment
+  // can only return one element at a time.
+
+  // Note :: Do not use messy names for your props, ListGroup commonily contains onItemSelect,
+  //         key here being "item being selected"
+  //         Object destructring needed in rendering method to send information back and forth from,
+  //         methods it itself contains and simplicfication of code.
+  //         Methods of manupliation need to be in the render method PRIOR To the
+  //         return statement. ORDER OF IMPLEMENTATION MATTERS!!!!!
 
   render() {
     const { length: movieCount } = this.state.movies;
