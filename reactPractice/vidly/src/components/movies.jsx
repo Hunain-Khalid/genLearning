@@ -7,6 +7,21 @@ import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/fakeGenreService";
 import _ from "lodash";
 
+/**
+ * @name: movies.jsx
+ * @date: 2020-08-24
+ * @author: Hunain Khalid
+ *
+ * Realized no need for extra / seperate page for ccomments
+ * can use per class... kinda expected + easier to follow
+ * reverted to an old file to see wher ei left off
+ *
+ *
+ * as expected below will be different handlers ex handle delete
+ * will handle delete etc, this code has the main logic.
+ *
+ */
+
 class Movies extends Component {
   state = {
     movies: [],
