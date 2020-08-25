@@ -20,6 +20,23 @@ import _ from "lodash";
  * as expected below will be different handlers ex handle delete
  * will handle delete etc, this code has the main logic.
  *
+ * ====
+ * migration of handle sort from moves.jsx to moviesTable.jsx
+ * the prior code is now in moviesTable and handleSort changed
+ * if instantiated in differemt areas/ pages no need to redo sorting
+ * logic
+ * ===
+ *
+ * ===
+ * same as line 23-26 but extracting movieHeader into new filey
+ * q4443
+ * ===
+ *
+ * ===
+ * need to extract the table body as well for resuage / better
+ * OOP
+ * ===
+ *
  */
 
 class Movies extends Component {
@@ -60,16 +77,8 @@ class Movies extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
-  handleSort = (path) => {
-    const sortColumn = { ...this.state.sortColumn };
-
-    if (sortColumn.path === path)
-      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
-    else {
-      sortColumn.path = path;
-      sortColumn.order = "asc";
-    }
-    console.log(path);
+  // This if else reverses the sorting if the path is the same
+  handleSort = (sortColumn) => {
     this.setState({ sortColumn });
   };
 
@@ -111,6 +120,7 @@ class Movies extends Component {
 
           <MoviesTable
             movies={movies}
+            sortColumn={sortColumn}
             onLike={this.handleLike}
             onDelete={this.handleDelete}
             onSort={this.handleSort}
