@@ -16,7 +16,7 @@ import _ from "lodash";
  * <TableBody columns = {this.columns} />
  *
  * Some logic will be needed to extracted to make the code cleaner
- * the renderCell function
+ * the renderCell function, again with another methodf
  *
  */
 class TableBody extends Component {
@@ -26,14 +26,20 @@ class TableBody extends Component {
     return _.get(item, column.path);
   };
 
+  createKey = (item, column) => {
+    return item._id + (column.path || column.key);
+  };
+
   render() {
     const { data, columns } = this.props;
     return (
       <tbody>
         {data.map((item) => (
-          <tr>
+          <tr key={item._id}>
             {columns.map((column) => (
-              <td>{this.renderCell(item, column)}</td>
+              <td key={this.createKey(item, column)}>
+                {this.renderCell(item, column)}
+              </td>
             ))}
           </tr>
         ))}

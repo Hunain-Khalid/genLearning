@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import TableHeader from "./common/tableHeader";
+import Table from "./common/table";
 import Like from "./common/like";
-import TableBody from "./common/tableBody";
 
 /**
  *
@@ -9,8 +8,11 @@ import TableBody from "./common/tableBody";
  ==\
  Also moved table header to own file such that 
  table headers can be reused, thead now replaced with columns!
- ==
- 
+ ===
+ had to also create a resuable "totality of a table" sfc
+ ===
+ after merging everything, this table can be resued for more
+ than just a movie database
  */
 
 class MoviesTable extends Component {
@@ -39,37 +41,14 @@ class MoviesTable extends Component {
   ];
 
   render() {
-    const { movies, onDelete, onLike, onSort, sortColumn } = this.props;
+    const { movies, onSort, sortColumn } = this.props;
     return (
-      <table className="table">
-        <TableHeader
-          columns={this.columns}
-          sortColumn={sortColumn}
-          onSort={onSort}
-        />
-        <TableBody columns={this.columns} data={movies} />
-        {/* <tbody>
-          {movies.map((movie) => (
-            <tr key={movie._id}>
-              <td>{movie.title}</td>
-              <td>{movie.genre.name}</td>
-              <td>{movie.numberInStock}</td>
-              <td>{movie.dailyRentalRate}</td>
-              <td>
-                <Like liked={movie.liked} onClick={() => onLike(movie)} />
-              </td>
-              <td>
-                <button
-                  onClick={() => onDelete(movie)}
-                  className="btn btn-danger btn-sm"
-                >
-                  DELETE
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody> */}
-      </table>
+      <Table
+        columns={this.columns}
+        data={movies}
+        sortColumn={sortColumn}
+        onSort={onSort}
+      />
     );
   }
 }

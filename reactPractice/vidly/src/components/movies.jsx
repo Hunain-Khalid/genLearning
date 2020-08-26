@@ -37,6 +37,11 @@ import _ from "lodash";
  * OOP
  * ===
  *
+ * code logic was polluting just the rendering of the component created
+ * get paged data
+ *
+ *
+ *
  */
 
 class Movies extends Component {
@@ -82,19 +87,14 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
-    const { length: movieCount } = this.state.movies;
+  getPagedData = () => {
     const {
       pageSize,
       currentPage,
       movies: allMovies,
       selectedGenre,
-      genres,
       sortColumn,
     } = this.state;
-
-    if (movieCount === 0)
-      return <p>There are no movies left in the database</p>;
 
     const filtered =
       selectedGenre && selectedGenre._id
@@ -104,6 +104,24 @@ class Movies extends Component {
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
     const movies = paginate(sorted, currentPage, pageSize);
+
+    return { totalCount: filtered.length, data: movies };
+  };
+
+  render() {
+    const { length: movieCount } = this.state.movies;
+    const {
+      pageSize,
+      currentPage,
+      selectedGenre,
+      genres,
+      sortColumn,
+    } = this.state;
+
+    if (movieCount === 0)
+      return <p>There are no movies left in the database</p>;
+
+    const { totalCount, data: movies } = this.getPagedData();
 
     return (
       <div className="row">
@@ -116,7 +134,7 @@ class Movies extends Component {
         </div>
 
         <div className="col">
-          <p>Movie Database!: Showing {filtered.length} movies.</p>
+          <p>Movie Database!: Showing {totalCount} movies.</p>
 
           <MoviesTable
             movies={movies}
@@ -127,7 +145,7 @@ class Movies extends Component {
           />
 
           <Pagination
-            itmsCnt={filtered.length}
+            itmsCnt={totalCount}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange}

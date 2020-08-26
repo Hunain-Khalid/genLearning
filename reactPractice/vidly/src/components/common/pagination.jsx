@@ -25,8 +25,7 @@ import _ from "lodash"; // from underscore javasceipt libarary
  * 3.0:  Prop Type checking should be done (acts as a param type checker, warns
  *       against the use of wrong types)
  */
-const Pagination = (props) => {
-  const { itmsCnt, pageSize, currentPage, onPageChange } = props;
+const Pagination = ({ itmsCnt, pageSize, currentPage, onPageChange }) => {
   //console.log(currentPage);
 
   const pagesCount = itmsCnt / pageSize;
