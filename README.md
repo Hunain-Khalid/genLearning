@@ -1,4 +1,4 @@
-# genLearning
+# generalLearning
 
 This repo contains all practice done for different languages/
 practice problems!
